@@ -1,0 +1,1 @@
+template: "Answer the question based on the context: Question: {question} Context: {context}"

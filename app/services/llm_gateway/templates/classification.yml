@@ -1,0 +1,1 @@
+template: "Classify the following text into categories: {text}"

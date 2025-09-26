@@ -1,0 +1,5 @@
+adapter: llama_cpp
+model: llama
+base_url: http://localhost:8080
+context_length: 2048
+performance: low

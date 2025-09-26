@@ -1,0 +1,5 @@
+adapter: localai
+model: gpt-3.5-turbo
+base_url: http://localhost:8080
+context_length: 4096
+performance: medium

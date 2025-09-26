@@ -1,0 +1,5 @@
+adapter: ollama
+model: llama3
+base_url: http://localhost:11434
+context_length: 4096
+performance: high
