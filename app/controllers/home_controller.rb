@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   def index
-    render plain: "LLM Gateway est opérationnel!"
+    # Render the index view
   end
 
   def test_mock

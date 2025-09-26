@@ -1,55 +1,478 @@
-<h1>LLM Gateway</h1>
-
-<p>Interface de démonstration pour tester le LLM Gateway</p>
-
-<div style="margin: 20px 0; padding: 10px; border: 1px solid #ccc;">
-  <h2>Test d'une requête</h2>
-  
-  <form id="llm-form">
-    <div>
-      <label for="query">Question:</label><br>
-      <textarea id="query" name="query" rows="3" cols="50" style="width: 100%;">Qu'est-ce que l'intelligence artificielle?</textarea>
-    </div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <style>
+    .hero-section {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      padding: 120px 0;
+      position: relative;
+      overflow: hidden;
+    }
     
-    <div style="margin-top: 10px;">
-      <label for="task">Tâche:</label><br>
-      <select id="task" name="task">
-        <option value="generation">Génération</option>
-        <option value="summary">Résumé</option>
-        <option value="qa">Question-Réponse</option>
-        <option value="classification">Classification</option>
-      </select>
-    </div>
+    .hero-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M10,10 L90,10 L90,90 L10,90 Z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>') repeat;
+      opacity: 0.4;
+    }
     
-    <div style="margin-top: 10px;">
-      <button type="submit">Envoyer</button>
+    .feature-card {
+      border-radius: 12px;
+      border: none;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease-in-out;
+      height: 100%;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+    }
+    
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      background-color: #e9f5ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-bottom: 20px;
+      color: #1a73e8;
+      font-size: 1.8rem;
+    }
+    
+    .demo-card {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    
+    .code-block {
+      background: #1e293b;
+      color: #e2e8f0;
+      border-radius: 8px;
+      padding: 20px;
+      font-family: monospace;
+      overflow-x: auto;
+    }
+    
+    .testimonial-card {
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+    
+    .cta-section {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      padding: 80px 0;
+      color: white;
+      border-radius: 16px;
+      margin: 50px 0;
+    }
+    
+    .footer-section {
+      background-color: #f8f9fa;
+      padding: 60px 0;
+    }
+    
+    .interactive-demo {
+      background-color: #f8fafc;
+      border-radius: 12px;
+      padding: 30px;
+      margin-top: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+  </style>
+  <title>LLM Gateway - La Passerelle IA d'Entreprise</title>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: #1a2332;">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">
+        <span class="text-primary">LLM</span>Gateway
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#features">Fonctionnalités</a></li>
+          <li class="nav-item"><a class="nav-link" href="#demo">Démo</a></li>
+          <li class="nav-item"><a class="nav-link" href="#architecture">Architecture</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+          <li class="nav-item"><a class="nav-link btn btn-primary text-white ms-3 px-4 rounded-pill" href="#demo">Essayer</a></li>
+        </ul>
+      </div>
     </div>
-  </form>
-  
-  <div style="margin-top: 20px;">
-    <h3>Résultat:</h3>
-    <pre id="result" style="background: #f5f5f5; padding: 10px; min-height: 100px;">Le résultat s'affichera ici...</pre>
-  </div>
-</div>
+  </nav>
 
-<script>
-document.getElementById('llm-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  const query = document.getElementById('query').value;
-  const task = document.getElementById('task').value;
-  
-  document.getElementById('result').textContent = 'Chargement...';
-  
-  fetch('/test', {
-    method: 'GET'
-  })
-  .then(response => response.json())
-  .then(data => {
-    document.getElementById('result').textContent = data.result;
-  })
-  .catch(error => {
-    document.getElementById('result').textContent = 'Erreur: ' + error.message;
-  });
-});
-</script>
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-7">
+          <h5 class="text-primary fw-bold mb-3">RÉVOLUTIONNEZ VOTRE STRATÉGIE IA</h5>
+          <h1 class="display-3 fw-bold mb-4">Industrialisez vos LLMs locaux en entreprise</h1>
+          <p class="lead mb-4">LLM Gateway unifie, sécurise et optimise vos modèles d'IA locaux pour une intégration fluide dans vos applications d'entreprise. Construisez des solutions robustes sans dépendance cloud.</p>
+          <div class="d-flex gap-3">
+            <a href="#demo" class="btn btn-primary btn-lg px-4 py-2 rounded-pill">Démo interactive</a>
+            <a href="#architecture" class="btn btn-outline-light btn-lg px-4 py-2 rounded-pill">Documentation</a>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <img src="https://via.placeholder.com/500x400?text=LLM+Gateway" class="img-fluid rounded-4 shadow-lg mt-4 mt-md-0" alt="LLM Gateway Dashboard">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-5 py-md-7 bg-light" id="features">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h6 class="text-primary fw-bold">FONCTIONNALITÉS</h6>
+        <h2 class="display-5 fw-bold">Toute la puissance des LLMs, sous votre contrôle</h2>
+        <p class="lead text-muted mx-auto" style="max-width: 700px;">Transformez vos modèles individuels en infrastructure IA robuste avec monitoring, fallback et intégration simplifiée.</p>
+      </div>
+      
+      <div class="row g-4">
+        <!-- Feature 1 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card p-4">
+            <div class="feature-icon">
+              <i class="bi bi-layers"></i>
+            </div>
+            <h4 class="mb-3">Multi-Modèles</h4>
+            <p class="text-muted">Intégrez Ollama, LocalAI, llama.cpp et d'autres moteurs via une seule API unifiée. Choisissez le bon modèle selon vos besoins.</p>
+          </div>
+        </div>
+        
+        <!-- Feature 2 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card p-4">
+            <div class="feature-icon">
+              <i class="bi bi-shield-check"></i>
+            </div>
+            <h4 class="mb-3">Haute Disponibilité</h4>
+            <p class="text-muted">Circuit breaker, fallback automatique et monitoring avancé pour garantir la stabilité de vos applications basées sur l'IA.</p>
+          </div>
+        </div>
+        
+        <!-- Feature 3 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card p-4">
+            <div class="feature-icon">
+              <i class="bi bi-speedometer2"></i>
+            </div>
+            <h4 class="mb-3">Performance Optimisée</h4>
+            <p class="text-muted">Cache intelligent, parallélisation et métriques détaillées pour maximiser le débit et minimiser la latence.</p>
+          </div>
+        </div>
+        
+        <!-- Feature 4 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card p-4">
+            <div class="feature-icon">
+              <i class="bi bi-collection"></i>
+            </div>
+            <h4 class="mb-3">Templates de Prompts</h4>
+            <p class="text-muted">Bibliothèque de prompts optimisés et versionnable pour garantir qualité et cohérence dans toutes vos applications.</p>
+          </div>
+        </div>
+        
+        <!-- Feature 5 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card p-4">
+            <div class="feature-icon">
+              <i class="bi bi-globe"></i>
+            </div>
+            <h4 class="mb-3">Récupération Externe</h4>
+            <p class="text-muted">Enrichissez vos prompts avec des données web ou des sources internes pour des réponses informées et précises.</p>
+          </div>
+        </div>
+        
+        <!-- Feature 6 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card p-4">
+            <div class="feature-icon">
+              <i class="bi bi-gear"></i>
+            </div>
+            <h4 class="mb-3">Modularité</h4>
+            <p class="text-muted">Architecture modulaire et extensible pour ajouter facilement de nouveaux modèles, adaptateurs ou fonctionnalités.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Section -->
+  <section class="py-5 py-md-7" id="demo">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+          <h6 class="text-primary fw-bold">DÉMO INTERACTIVE</h6>
+          <h2 class="display-5 fw-bold mb-4">Testez LLM Gateway en action</h2>
+          <p class="lead">Posez une question ou demandez une tâche spécifique pour voir comment notre passerelle unifie l'accès à vos LLMs locaux.</p>
+          
+          <!-- Interactive Demo Component -->
+          <div class="interactive-demo mt-4">
+            <form id="llm-form">
+              <div class="mb-4">
+                <label for="query" class="form-label fw-bold">Votre requête</label>
+                <textarea id="query" name="query" class="form-control form-control-lg" rows="3" placeholder="Exemple : Qu'est-ce que l'intelligence artificielle?">Qu'est-ce que l'intelligence artificielle?</textarea>
+              </div>
+              
+              <div class="row mb-4">
+                <div class="col">
+                  <label for="task" class="form-label fw-bold">Type de tâche</label>
+                  <select id="task" name="task" class="form-select form-select-lg">
+                    <option value="generation">Génération</option>
+                    <option value="summary">Résumé</option>
+                    <option value="qa">Question-Réponse</option>
+                    <option value="classification">Classification</option>
+                  </select>
+                </div>
+                <div class="col-auto d-flex align-items-end">
+                  <button type="submit" class="btn btn-primary btn-lg px-4 rounded-pill">
+                    <i class="bi bi-send me-2"></i>Exécuter
+                  </button>
+                </div>
+              </div>
+              
+              <div class="result-container">
+                <label class="form-label fw-bold">Résultat</label>
+                <div id="result" class="code-block p-4 rounded">Le résultat s'affichera ici...</div>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+        <div class="col-lg-6">
+          <div class="card demo-card">
+            <div class="card-header bg-dark text-white p-3 d-flex align-items-center">
+              <div class="d-flex align-items-center">
+                <div style="width: 12px; height: 12px; border-radius: 50%; background-color: #ff5f56; margin-right: 8px;"></div>
+                <div style="width: 12px; height: 12px; border-radius: 50%; background-color: #ffbd2e; margin-right: 8px;"></div>
+                <div style="width: 12px; height: 12px; border-radius: 50%; background-color: #27c93f; margin-right: 8px;"></div>
+              </div>
+              <span class="ms-2 small">Terminal</span>
+            </div>
+            <div class="card-body p-0">
+              <div class="code-block m-0" style="border-radius: 0;">
+                <pre class="mb-0"><span class="text-success">$</span> curl -X POST http://localhost:3000/api/v1/llm/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "Résume les avantages des LLMs locaux",
+    "task": "summary"
+  }'
+
+<span class="text-warning">{</span>
+  "result": "Les LLMs locaux offrent plusieurs avantages: confidentialité des données, latence réduite, coûts prévisibles, personnalisation avancée, et fonctionnement hors ligne. Ils permettent aux entreprises de garder le contrôle total sur leurs données sensibles tout en bénéficiant de performances optimisées pour leurs cas d'usage spécifiques."
+<span class="text-warning">}</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture Section -->
+  <section class="py-5 py-md-7 bg-light" id="architecture">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h6 class="text-primary fw-bold">ARCHITECTURE</h6>
+        <h2 class="display-5 fw-bold">Une solution robuste et évolutive</h2>
+        <p class="lead text-muted mx-auto" style="max-width: 700px;">Conçue avec des principes de fiabilité et de modularité pour s'adapter à vos besoins d'entreprise.</p>
+      </div>
+      
+      <div class="row g-4">
+        <div class="col-lg-6">
+          <img src="https://via.placeholder.com/600x400?text=Architecture+Schema" class="img-fluid rounded-4 shadow" alt="Architecture LLM Gateway">
+        </div>
+        
+        <div class="col-lg-6">
+          <div class="accordion" id="architectureAccordion">
+            <div class="accordion-item border-0 mb-3 shadow-sm rounded">
+              <h2 class="accordion-header">
+                <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                  Gateway Core
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#architectureAccordion">
+                <div class="accordion-body">
+                  Orchestration centralisée de tous les composants avec gestion des requêtes, load balancing et surveillance de l'état des services.
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item border-0 mb-3 shadow-sm rounded">
+              <h2 class="accordion-header">
+                <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                  Adaptateurs LLM
+                </button>
+              </h2>
+              <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#architectureAccordion">
+                <div class="accordion-body">
+                  Interface normalisée pour Ollama, LocalAI et llama.cpp avec gestion spécifique des paramètres par modèle et conversion des formats.
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item border-0 mb-3 shadow-sm rounded">
+              <h2 class="accordion-header">
+                <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                  Système de Cache
+                </button>
+              </h2>
+              <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#architectureAccordion">
+                <div class="accordion-body">
+                  Cache multi-niveaux avec invalidation intelligente et stratégie de remplacement LRU pour optimiser les performances et réduire la charge.
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item border-0 mb-3 shadow-sm rounded">
+              <h2 class="accordion-header">
+                <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                  Fetchers Externes
+                </button>
+              </h2>
+              <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#architectureAccordion">
+                <div class="accordion-body">
+                  Récupération asynchrone de données web ou d'APIs avec traitement et normalisation avant intégration dans les prompts.
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item border-0 mb-3 shadow-sm rounded">
+              <h2 class="accordion-header">
+                <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+                  Circuit Breaker
+                </button>
+              </h2>
+              <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#architectureAccordion">
+                <div class="accordion-body">
+                  Protège contre la surcharge et les défaillances en cascade avec gestion intelligente des retries et fallbacks.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="container">
+    <div class="cta-section text-center">
+      <h2 class="display-5 fw-bold mb-3">Prêt à optimiser vos LLMs locaux?</h2>
+      <p class="lead mb-4 mx-auto" style="max-width: 700px;">Déployez LLM Gateway dès aujourd'hui et transformez vos modèles isolés en infrastructure IA robuste pour l'entreprise.</p>
+      <div class="d-flex justify-content-center gap-3">
+        <a href="#demo" class="btn btn-light btn-lg px-4 py-2 rounded-pill">Essayer la démo</a>
+        <a href="https://github.com/yasonrails/LLM.Gateway" class="btn btn-outline-light btn-lg px-4 py-2 rounded-pill">Documentation</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer-section" id="contact">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4 mb-lg-0">
+          <h4 class="fw-bold mb-4"><span class="text-primary">LLM</span>Gateway</h4>
+          <p class="text-muted">La solution open-source pour industrialiser vos modèles de langage locaux en entreprise.</p>
+          <div class="d-flex gap-3 mt-4">
+            <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle p-2">
+              <i class="bi bi-github"></i>
+            </a>
+            <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle p-2">
+              <i class="bi bi-twitter"></i>
+            </a>
+            <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle p-2">
+              <i class="bi bi-linkedin"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div class="col-md-4 col-lg-2 mb-4 mb-md-0">
+          <h6 class="fw-bold mb-4">Produit</h6>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="#features" class="text-decoration-none text-muted">Fonctionnalités</a></li>
+            <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Documentation</a></li>
+            <li class="mb-2"><a href="#demo" class="text-decoration-none text-muted">Démo</a></li>
+            <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Pricing</a></li>
+          </ul>
+        </div>
+        
+        <div class="col-md-4 col-lg-2 mb-4 mb-md-0">
+          <h6 class="fw-bold mb-4">Ressources</h6>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Blog</a></li>
+            <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Tutoriels</a></li>
+            <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Communauté</a></li>
+            <li class="mb-2"><a href="#" class="text-decoration-none text-muted">API</a></li>
+          </ul>
+        </div>
+        
+        <div class="col-md-4 col-lg-4">
+          <h6 class="fw-bold mb-4">Restez informé</h6>
+          <p class="text-muted mb-3">Abonnez-vous à notre newsletter pour recevoir les dernières actualités et mises à jour.</p>
+          <form>
+            <div class="input-group mb-3">
+              <input type="email" class="form-control" placeholder="Votre email">
+              <button class="btn btn-primary" type="button">S'abonner</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <hr class="my-4">
+      
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <p class="text-muted small mb-4 mb-md-0">&copy; 2025 LLM Gateway. Tous droits réservés.</p>
+        <div class="d-flex gap-3">
+          <a href="#" class="text-decoration-none text-muted small">Confidentialité</a>
+          <a href="#" class="text-decoration-none text-muted small">CGU</a>
+          <a href="#" class="text-decoration-none text-muted small">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('llm-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const query = document.getElementById('query').value;
+      const task = document.getElementById('task').value;
+      
+      document.getElementById('result').textContent = 'Chargement...';
+      
+      fetch('/test', {
+        method: 'GET'
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('result').textContent = data.result;
+      })
+      .catch(error => {
+        document.getElementById('result').textContent = 'Erreur: ' + error.message;
+      });
+    });
+  </script>
+</body>
+</html>

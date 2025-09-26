@@ -71,3 +71,8 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+# Bootstrap is included via CDN instead of gem
+# gem "bootstrap", "~> 5.3"
+
+gem "sassc", "~> 2.4"
