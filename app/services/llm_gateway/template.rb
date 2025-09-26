@@ -1,9 +1,10 @@
 module LlmGateway
   class Template
     TEMPLATES = {
-      summary: "Summarize the following text: {text}",
-      qa: "Answer the question based on the context: Question: {question} Context: {context}",
-      generation: "Generate text on the topic: {topic}"
+      summary: "Résume le texte suivant de manière concise et claire: {text}",
+      qa: "Réponds à la question suivante en utilisant uniquement les informations du contexte fourni. Question: {question} Contexte: {context}",
+      generation: "Génère un texte informatif et détaillé sur le sujet suivant: {topic}",
+      classification: "Classe le texte suivant dans une catégorie appropriée: {text}"
     }
 
     def self.render(template_key, variables = {})

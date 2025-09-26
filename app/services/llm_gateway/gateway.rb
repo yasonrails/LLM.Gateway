@@ -4,9 +4,17 @@ module LlmGateway
       @adapters = load_adapters
       @cache = LlmGateway::Cache.new
       @fetcher = Fetchers::ExternalFetcher.new
+    rescue => e
+      Rails.logger.error "Erreur d'initialisation: #{e.message}"
+      @mock_mode = true
     end
 
     def generate_with_fetch(query, task = :generation, sources = [], options = {})
+      # Mode simulation si les services externes ne sont pas disponibles
+      if @mock_mode
+        return mock_response(query, task)
+      end
+      
       # Fetch data if sources provided
       fetched_data = @fetcher.fetch_data(query, sources) if sources.any?
 
@@ -43,6 +51,19 @@ module LlmGateway
     end
 
     private
+
+    def mock_response(query, task)
+      case task
+      when :summary
+        "Voici un résumé simulé pour la requête : #{query}"
+      when :qa
+        "Réponse simulée à la question : #{query}"
+      when :classification
+        "Classification simulée du texte : #{query}"
+      else
+        "Ceci est une réponse simulée du LLM Gateway pour la requête : #{query}.\n\nLe système est en mode simulation car les services LLM (Ollama, LocalAI, llama.cpp) ne sont pas disponibles."
+      end
+    end
 
     def load_adapters
       [

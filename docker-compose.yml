@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - ollama
+      - localai
+    environment:
+      RAILS_ENV: development
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+
+  localai:
+    image: localai/localai:latest
+    volumes:
+      - localai_data:/app/data
+    ports:
+      - "8080:8080"
+    environment:
+      - MODELS_PATH=/app/data
+
+volumes:
+  ollama_data:
+  localai_data:

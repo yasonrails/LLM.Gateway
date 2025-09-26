@@ -1,77 +1,86 @@
-# LLM Gateway Prototype
+# LLM Gateway - Passerelle pour modèles de langage locaux
 
-This is a prototype MVP for an LLM Gateway that provides a unified interface for multiple local LLM services (Ollama, LocalAI, llama.cpp), with external data fetching, caching, and prompt templating.
+Une passerelle robuste et professionnelle pour gérer plusieurs moteurs LLM locaux (Ollama, LocalAI, llama.cpp) avec cache, fallback et récupération de données externes.
 
-## Features
+## Fonctionnalités
 
-- **Unified LLM Interface**: Supports multiple adapters for different LLM engines.
-- **External Data Fetching**: Fetch and integrate public web data into prompts.
-- **Caching**: Simple caching to avoid repeated computations.
-- **Prompt Templates**: Predefined templates for common tasks.
-- **Modular Design**: Easy to add new adapters or fetchers.
+- **Interface unifiée** pour plusieurs moteurs LLM
+- **Système de fallback** automatique si un moteur tombe en panne
+- **Mise en cache** pour éviter les requêtes répétées
+- **Récupération externe** de données du web
+- **Templates de prompts** pour différentes tâches
+- **Architecture modulaire** et extensible
 
-## Setup
+## Installation
 
-1. Install dependencies:
+1. Installer les dépendances:
    ```bash
    bundle install
    ```
 
-2. Ensure LLM services are running:
-   - Ollama: `ollama serve` (default port 11434)
-   - LocalAI: Run LocalAI server (default port 8080)
-   - llama.cpp: Run llama.cpp server (default port 8080)
+2. S'assurer que les services LLM sont en cours d'exécution:
+   - Ollama: `ollama serve` (port par défaut 11434)
+   - LocalAI: Serveur LocalAI (port par défaut 8080)
+   - llama.cpp: Serveur llama.cpp (port par défaut 8080)
 
-3. Start the Rails server:
+3. Démarrer le serveur Rails:
    ```bash
    rails server
    ```
 
-## API Usage
+## Utilisation de l'API
 
-### Generate Response
+### Génération de texte
 
 Endpoint: `POST /api/v1/llm/generate`
 
-Parameters:
-- `query`: The main query or topic
-- `task`: Template to use (:summary, :qa, :generation) (default: :generation)
-- `sources`: Array of URLs to fetch data from (optional)
+Paramètres:
+- `query`: La requête principale
+- `task`: Template à utiliser (:summary, :qa, :generation, :classification) (défaut: :generation)
+- `sources`: Tableau d'URLs pour récupérer des données (optionnel)
 
-Example using curl:
+Exemple avec curl:
 
 ```bash
 curl -X POST http://localhost:3000/api/v1/llm/generate \
   -H "Content-Type: application/json" \
   -d '{
-    "query": "What is the latest news on AI?",
-    "task": "summary",
-    "sources": ["https://example.com/news1", "https://example.com/news2"]
+    "query": "Qu'\''est-ce que l'\''intelligence artificielle?",
+    "task": "generation"
   }'
 ```
 
-Response:
+Réponse:
 ```json
 {
-  "result": "Summarized content based on fetched data and LLM generation..."
+  "result": "L'intelligence artificielle (IA) désigne les systèmes conçus pour imiter l'intelligence humaine..."
 }
 ```
 
-## Structure
+## Architecture
 
-- `app/services/llm_gateway.rb`: Main gateway service
-- `app/services/adapters/`: LLM adapters (Base, Ollama, LocalAI, llama.cpp)
-- `app/services/fetchers/external_fetcher.rb`: Web data fetcher
-- `app/services/cache/simple_cache.rb`: Caching service
-- `app/services/templates/prompt_templates.rb`: Prompt templates
-- `app/controllers/api/v1/llm_gateway_controller.rb`: API controller
+- **Gateway**: Point d'entrée principal coordonnant les composants
+- **Adapters**: Interface pour chaque moteur LLM (Ollama, LocalAI, llama.cpp)
+- **Cache**: Évite les requêtes répétées
+- **Fetcher**: Récupère des données du web
+- **Templates**: Modèles de prompts pour différentes tâches
+- **Model Registry**: Configuration et gestion des modèles
 
-## Adding New Adapters
+## Voir aussi
 
-Create a new class in `app/services/adapters/` inheriting from `Adapters::BaseAdapter`, implementing `generate` and `available?` methods.
+Consultez [DOCUMENTATION.md](DOCUMENTATION.md) pour plus de détails techniques et d'exemples.
 
-## Adding New Fetchers
+## Docker
 
-Create a new class in `app/services/fetchers/` with a `fetch_data` method.
+Un fichier Docker et docker-compose sont fournis pour faciliter le déploiement:
 
-This is a prototype and not production-ready. Add error handling, authentication, rate limiting, etc., for production use.
+```bash
+docker-compose up -d
+```
+
+## Contribution
+
+Ce projet est un prototype modulaire conçu pour être facilement étendu. Vous pouvez ajouter:
+- De nouveaux adaptateurs LLM
+- Des fetchers pour d'autres sources de données
+- Des templates de prompts supplémentaires

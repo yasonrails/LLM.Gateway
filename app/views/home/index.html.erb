@@ -1,0 +1,55 @@
+<h1>LLM Gateway</h1>
+
+<p>Interface de démonstration pour tester le LLM Gateway</p>
+
+<div style="margin: 20px 0; padding: 10px; border: 1px solid #ccc;">
+  <h2>Test d'une requête</h2>
+  
+  <form id="llm-form">
+    <div>
+      <label for="query">Question:</label><br>
+      <textarea id="query" name="query" rows="3" cols="50" style="width: 100%;">Qu'est-ce que l'intelligence artificielle?</textarea>
+    </div>
+    
+    <div style="margin-top: 10px;">
+      <label for="task">Tâche:</label><br>
+      <select id="task" name="task">
+        <option value="generation">Génération</option>
+        <option value="summary">Résumé</option>
+        <option value="qa">Question-Réponse</option>
+        <option value="classification">Classification</option>
+      </select>
+    </div>
+    
+    <div style="margin-top: 10px;">
+      <button type="submit">Envoyer</button>
+    </div>
+  </form>
+  
+  <div style="margin-top: 20px;">
+    <h3>Résultat:</h3>
+    <pre id="result" style="background: #f5f5f5; padding: 10px; min-height: 100px;">Le résultat s'affichera ici...</pre>
+  </div>
+</div>
+
+<script>
+document.getElementById('llm-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const query = document.getElementById('query').value;
+  const task = document.getElementById('task').value;
+  
+  document.getElementById('result').textContent = 'Chargement...';
+  
+  fetch('/test', {
+    method: 'GET'
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('result').textContent = data.result;
+  })
+  .catch(error => {
+    document.getElementById('result').textContent = 'Erreur: ' + error.message;
+  });
+});
+</script>

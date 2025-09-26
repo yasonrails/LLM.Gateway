@@ -12,5 +12,8 @@ Rails.application.routes.draw do
   end
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "home#index"
+  
+  # Route de test pour simulation
+  get 'test', to: 'home#test_mock'
 end
